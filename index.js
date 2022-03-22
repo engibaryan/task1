@@ -1,28 +1,49 @@
-const express = require('express')
-const app = express()
-const port = 3000
-const data = require('./data.json')
+const express = require("express");
+const app = express();
+const PORT = 5006;
 
+app.use(express.json());
 
+let data = [
+  {
+    Id: 1,
+    Title: "scanning",
+    isDone: true,
+  },
 
-app.get("/customers", (req, res) => {
-   res.send(data)
+  {
+    Id: 2,
+    Title: "reading",
+    isDone: false,
+  },
+
+  {
+    Id: 3,
+    Title: "running ",
+    isDone: true,
+  },
+
+  {
+    Id: 4,
+    Title: "playing",
+    isDone: true,
+  },
+];
+
+app.get("/notes/:id", (req, res) => {
+  return res.status(200).send(data[req.params.id - 1]);
 });
 
-app.get("/customer/:userId", (req, res) => {
-    for(let i = 0; i < data.length; i++)
-        if(data[req.params.userId-1] == data[i] ) {
-        res.send(data[req.params.userId-1].Name)
-        }
-    
-    return res.send("Wrond ID")
-
+app.post("/notes/:id", (req, res) => {
+  data[req.params.id - 1] = req.body;
+  return res.send(data);
 });
 
+app.delete("/note/:id", (req, res) => {
+  data[req.params.id - 1] = undefined;
+  return res.send(data);
+});
 
-app.listen(port, () => {
-    console.log(`app listening at http://localhost:${port}`)
-  });
-
-
-
+app.listen(PORT, () => {
+  console.log(`app listening at http://localhost:${PORT}`);
+});
